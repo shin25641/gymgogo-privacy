@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>짐고고 GymGoGo — 가는 것만 책임집니다</title>
+<meta name="description" content="운동 추천은 없습니다. 헬스장에 가는 것만 책임지는 출석 강제 알람 앱. 71%가 1개월 내 포기하는 헬스장, 짐고고가 데려갑니다.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;600;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{
+  --charcoal:#1A1A1A; --deep:#0F0F0F; --lime:#A3E635; --lime-dim:#84CC16;
+  --surface:#222222; --surface-2:#1B1B1B; --line:#333333;
+  --white:#F7F8F5; --gray:#94A3B8; --gray-dim:#6B6B6B;
+  --kr:'Pretendard',sans-serif; --disp:'Anton',sans-serif; --en:'Archivo',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--charcoal); color:var(--white); font-family:var(--kr);
+  -webkit-font-smoothing:antialiased; overflow-x:hidden; line-height:1.5;
+}
+/* grain overlay */
+body::after{
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:9999; opacity:.035;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+::selection{background:var(--lime); color:var(--charcoal)}
+a{color:inherit; text-decoration:none}
+.wrap{max-width:1200px; margin:0 auto; padding:0 28px}
+.lime{color:var(--lime)}
+.mono-label{font-family:var(--en); font-weight:800; font-size:.72rem; letter-spacing:.32em; text-transform:uppercase; color:var(--lime)}
+
+/* ---------- NAV ---------- */
+nav{
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:18px 28px; backdrop-filter:blur(12px);
+  background:rgba(26,26,26,.55); border-bottom:1px solid transparent; transition:.3s;
+}
+nav.scrolled{background:rgba(15,15,15,.85); border-bottom:1px solid var(--line)}
+.logo{font-family:var(--disp); font-size:1.5rem; letter-spacing:.02em; display:flex; align-items:center; gap:8px}
+.logo .dot{width:9px; height:9px; background:var(--lime); border-radius:50%; box-shadow:0 0 14px var(--lime); animation:pulse 1.8s infinite}
+@keyframes pulse{0%,100%{opacity:1; transform:scale(1)}50%{opacity:.5; transform:scale(.8)}}
+.nav-links{display:flex; gap:32px; align-items:center}
+.nav-links a{font-size:.9rem; color:var(--gray); transition:.2s}
+.nav-links a:hover{color:var(--white)}
+.nav-cta{font-family:var(--kr); font-weight:700; font-size:.85rem; background:var(--lime); color:var(--charcoal); padding:10px 20px; border-radius:100px; transition:.2s}
+.nav-cta:hover{transform:translateY(-2px); box-shadow:0 8px 24px rgba(163,230,53,.3)}
+@media(max-width:760px){.nav-links a:not(.nav-cta){display:none}}
+
+/* ---------- HERO ---------- */
+.hero{position:relative; min-height:100vh; display:flex; align-items:center; padding-top:80px; overflow:hidden}
+.hero-glow{position:absolute; width:900px; height:900px; border-radius:50%; top:-30%; right:-20%;
+  background:radial-gradient(circle, rgba(163,230,53,.16) 0%, transparent 60%); pointer-events:none}
+.hero-grid{position:absolute; inset:0; opacity:.4;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:64px 64px; mask-image:radial-gradient(circle at 70% 40%, black, transparent 70%)}
+.hero .wrap{position:relative; z-index:2; display:grid; grid-template-columns:1.2fr .8fr; gap:40px; align-items:center}
+.hero-badge{display:inline-flex; align-items:center; gap:8px; padding:7px 14px; border:1px solid var(--line);
+  border-radius:100px; font-size:.78rem; color:var(--gray); margin-bottom:28px; background:var(--surface-2)}
+.hero-badge .b-dot{width:6px;height:6px;border-radius:50%;background:var(--lime);box-shadow:0 0 10px var(--lime)}
+.hero h1{font-family:var(--disp); font-size:clamp(3.5rem,9vw,7.5rem); line-height:.92; letter-spacing:-.01em; margin-bottom:8px}
+.hero h1 .go{display:inline-block; color:var(--lime); text-shadow:0 0 40px rgba(163,230,53,.4)}
+.hero .kr-head{font-family:var(--kr); font-weight:900; font-size:clamp(1.6rem,3.5vw,2.6rem); line-height:1.25; margin:18px 0 22px; letter-spacing:-.02em}
+.hero p.sub{font-size:1.08rem; color:var(--gray); max-width:440px; margin-bottom:36px; line-height:1.6}
+.hero-cta-row{display:flex; gap:14px; flex-wrap:wrap; align-items:center}
+.btn-primary{font-weight:700; background:var(--lime); color:var(--charcoal); padding:16px 30px; border-radius:100px; font-size:1rem; border:none; cursor:pointer; transition:.25s; display:inline-flex; align-items:center; gap:9px}
+.btn-primary:hover{transform:translateY(-3px); box-shadow:0 12px 32px rgba(163,230,53,.35)}
+.btn-ghost{font-weight:600; color:var(--white); padding:16px 26px; border:1px solid var(--line); border-radius:100px; font-size:1rem; transition:.25s}
+.btn-ghost:hover{border-color:var(--lime); color:var(--lime)}
+.reveal-line{overflow:hidden; display:block}
+.reveal-line>span{display:block; transform:translateY(110%); animation:riseUp .9s cubic-bezier(.16,1,.3,1) forwards}
+@keyframes riseUp{to{transform:translateY(0)}}
+
+/* phone mockup */
+.phone{width:270px; height:560px; margin:0 auto; background:var(--charcoal); border:8px solid #2a2a2a; border-radius:42px;
+  box-shadow:0 40px 80px rgba(0,0,0,.6), 0 0 60px rgba(163,230,53,.08); position:relative; overflow:hidden;
+  animation:float 5s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-16px)}}
+.phone-notch{position:absolute; top:0; left:50%; transform:translateX(-50%); width:110px; height:26px; background:#2a2a2a; border-radius:0 0 16px 16px; z-index:3}
+.scr{padding:34px 16px 0}
+.scr .top{display:flex; justify-content:space-between; font-size:.7rem; color:var(--gray); padding:0 6px 12px}
+.scr h3{font-size:1.05rem; font-weight:600; margin-bottom:14px; padding:0 4px}
+.streak-card{background:var(--lime); border-radius:18px; padding:20px; text-align:center; margin-bottom:14px}
+.streak-card .big{font-family:var(--disp); font-size:2.8rem; color:var(--charcoal); line-height:1}
+.streak-card .lbl{font-size:.75rem; color:#3B6D11; font-weight:700; margin-top:4px}
+.scr-row{background:var(--surface); border-radius:13px; padding:13px 14px; margin-bottom:9px; display:flex; align-items:center; gap:11px}
+.scr-row .ic{width:34px;height:34px;border-radius:9px;background:#2f2f2f;display:flex;align-items:center;justify-content:center;color:var(--lime);font-size:1rem}
+.scr-row .t1{font-size:.85rem; font-weight:600}
+.scr-row .t2{font-size:.7rem; color:var(--gray)}
+.scr-row .dday{margin-left:auto; color:var(--lime); font-size:.78rem; font-weight:700}
+@media(max-width:880px){.hero .wrap{grid-template-columns:1fr; text-align:center} .hero-phone{display:none}}
+
+/* ---------- SECTION SHELL ---------- */
+section{padding:120px 0; position:relative}
+.sec-head{margin-bottom:60px; max-width:680px}
+.sec-head .mono-label{margin-bottom:16px; display:block}
+.sec-head h2{font-family:var(--kr); font-weight:900; font-size:clamp(2rem,4.5vw,3.4rem); line-height:1.12; letter-spacing:-.03em}
+.sec-head p{color:var(--gray); font-size:1.1rem; margin-top:18px; line-height:1.6}
+
+/* reveal on scroll */
+.fade{opacity:0; transform:translateY(40px); transition:opacity .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1)}
+.fade.in{opacity:1; transform:none}
+
+/* ---------- PROBLEM ---------- */
+.problem{background:var(--deep)}
+.prob-grid{display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center}
+.prob-num{font-family:var(--disp); font-size:clamp(7rem,22vw,18rem); line-height:.8; color:var(--lime); text-shadow:0 0 60px rgba(163,230,53,.25); letter-spacing:-.02em}
+.prob-num span{font-size:.4em; vertical-align:top}
+.prob-txt h2{font-family:var(--kr); font-weight:900; font-size:clamp(1.8rem,4vw,2.8rem); line-height:1.2; letter-spacing:-.02em; margin-bottom:20px}
+.prob-txt p{color:var(--gray); font-size:1.05rem; line-height:1.7; margin-bottom:26px}
+.prob-stats{display:flex; gap:14px}
+.prob-stat{flex:1; background:var(--surface-2); border:1px solid var(--line); border-radius:14px; padding:18px}
+.prob-stat .pct{font-family:var(--disp); font-size:1.8rem; color:var(--white)}
+.prob-stat .desc{font-size:.82rem; color:var(--gray); margin-top:4px}
+.src{font-size:.75rem; color:var(--gray-dim); margin-top:24px}
+@media(max-width:760px){.prob-grid{grid-template-columns:1fr; gap:30px}}
+
+/* ---------- HOW ---------- */
+.how-steps{display:grid; grid-template-columns:repeat(3,1fr); gap:24px}
+.step{background:var(--surface-2); border:1px solid var(--line); border-radius:22px; padding:36px 30px; position:relative; transition:.3s; overflow:hidden}
+.step:hover{border-color:var(--lime); transform:translateY(-6px)}
+.step::before{content:attr(data-n); position:absolute; top:-10px; right:14px; font-family:var(--disp); font-size:6rem; color:var(--surface); z-index:0; transition:.3s}
+.step:hover::before{color:rgba(163,230,53,.12)}
+.step .s-ic{width:54px; height:54px; border-radius:14px; background:var(--lime); display:flex; align-items:center; justify-content:center; margin-bottom:22px; position:relative; z-index:1}
+.step .s-ic svg{width:28px;height:28px;stroke:var(--charcoal)}
+.step h3{font-size:1.3rem; font-weight:800; margin-bottom:10px; position:relative; z-index:1; letter-spacing:-.02em}
+.step p{color:var(--gray); font-size:.95rem; line-height:1.6; position:relative; z-index:1}
+@media(max-width:760px){.how-steps{grid-template-columns:1fr}}
+
+/* ---------- MISSION ---------- */
+.missions{display:grid; grid-template-columns:repeat(4,1fr); gap:16px}
+.mcard{background:var(--surface-2); border:1px solid var(--line); border-radius:18px; padding:28px 22px; transition:.3s; position:relative}
+.mcard:hover{transform:translateY(-6px)}
+.mcard .bar{width:38px; height:4px; border-radius:3px; margin-bottom:20px}
+.mcard h4{font-size:1.25rem; font-weight:800; margin-bottom:6px; letter-spacing:-.02em}
+.mcard .tier{font-size:.72rem; font-weight:700; font-family:var(--en); letter-spacing:.1em; text-transform:uppercase; padding:3px 9px; border-radius:6px; display:inline-block; margin-bottom:16px}
+.tier.free{background:#2f2f2f; color:var(--gray)}
+.tier.pro{background:var(--lime); color:var(--charcoal)}
+.mcard ul{list-style:none}
+.mcard li{font-size:.85rem; color:var(--gray); padding:5px 0 5px 20px; position:relative}
+.mcard li::before{content:"✓"; position:absolute; left:0; color:var(--lime); font-weight:700}
+.mcard.pro-glow{border-color:rgba(163,230,53,.4)}
+@media(max-width:880px){.missions{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.missions{grid-template-columns:1fr}}
+
+/* ---------- BADGES ---------- */
+.badges-sec{background:var(--deep)}
+.badge-flow{display:flex; gap:14px; flex-wrap:wrap; justify-content:center; margin-bottom:40px}
+.badge{flex:1; min-width:140px; background:var(--surface-2); border:1px solid var(--line); border-radius:16px; padding:24px 16px; text-align:center; transition:.3s}
+.badge:hover{transform:translateY(-6px); border-color:var(--lime)}
+.badge.key{background:var(--lime); border-color:var(--lime)}
+.badge .b-ic{font-size:2rem; margin-bottom:10px}
+.badge h5{font-size:.95rem; font-weight:800}
+.badge.key h5{color:var(--charcoal)}
+.badge .days{font-size:.75rem; color:var(--gray); margin-top:3px}
+.badge.key .days{color:#3B6D11; font-weight:700}
+.share-card{max-width:380px; margin:0 auto; background:var(--charcoal); border:1px solid var(--line); border-radius:20px; padding:28px; position:relative; box-shadow:0 0 50px rgba(163,230,53,.1)}
+.share-card .sc-top{display:flex; align-items:center; gap:8px; margin-bottom:14px}
+.share-card .sc-badge{font-family:var(--disp); font-size:1.5rem; color:var(--lime)}
+.share-card .sc-user{font-size:.82rem; color:var(--gray)}
+.share-card .sc-main{font-size:1.05rem; font-weight:600; margin-bottom:8px}
+.share-card .sc-quote{font-size:1.1rem; color:var(--lime); font-style:italic; font-weight:700}
+.share-card .sc-brand{font-family:var(--en); font-size:.7rem; color:var(--gray-dim); margin-top:12px; letter-spacing:.2em}
+
+/* ---------- PRICING ---------- */
+.price-grid{display:grid; grid-template-columns:repeat(5,1fr); gap:12px; align-items:stretch}
+.pcard{background:var(--surface-2); border:1px solid var(--line); border-radius:18px; padding:26px 18px; text-align:center; transition:.3s; display:flex; flex-direction:column}
+.pcard:hover{transform:translateY(-6px)}
+.pcard .period{font-size:.9rem; color:var(--gray); margin-bottom:10px; font-weight:600}
+.pcard .price{font-family:var(--disp); font-size:1.7rem; line-height:1; margin-bottom:4px}
+.pcard .permo{font-size:.72rem; color:var(--gray-dim); margin-bottom:auto}
+.pcard .save{font-size:.7rem; color:var(--lime); font-weight:700; margin-top:8px}
+.pcard.best{background:linear-gradient(180deg, rgba(163,230,53,.12), var(--surface-2)); border:1.5px solid var(--lime); position:relative; box-shadow:0 0 40px rgba(163,230,53,.15)}
+.pcard.best .tag{position:absolute; top:-11px; left:50%; transform:translateX(-50%); background:var(--lime); color:var(--charcoal); font-size:.68rem; font-weight:800; padding:4px 12px; border-radius:100px; white-space:nowrap; font-family:var(--en); letter-spacing:.08em}
+.pcard.best .price{color:var(--lime)}
+.price-note{text-align:center; color:var(--gray); font-size:.9rem; margin-top:34px}
+.price-note b{color:var(--white)}
+@media(max-width:880px){.price-grid{grid-template-columns:1fr 1fr 1fr}}
+@media(max-width:560px){.price-grid{grid-template-columns:1fr 1fr}}
+
+/* ---------- CTA ---------- */
+.cta-final{text-align:center; position:relative; overflow:hidden}
+.cta-final .glow{position:absolute; width:700px; height:700px; border-radius:50%; left:50%; top:50%; transform:translate(-50%,-50%);
+  background:radial-gradient(circle, rgba(163,230,53,.14) 0%, transparent 60%); pointer-events:none}
+.cta-final h2{font-family:var(--disp); font-size:clamp(2.6rem,7vw,5.5rem); line-height:.95; margin-bottom:8px; position:relative}
+.cta-final .kr{font-family:var(--kr); font-weight:900; font-size:clamp(1.4rem,3vw,2rem); margin-bottom:30px; position:relative; letter-spacing:-.02em}
+.signup{display:flex; gap:10px; max-width:460px; margin:0 auto; position:relative; flex-wrap:wrap; justify-content:center}
+.signup input{flex:1; min-width:220px; background:var(--surface-2); border:1px solid var(--line); border-radius:100px; padding:16px 24px; color:var(--white); font-size:1rem; font-family:var(--kr); outline:none; transition:.2s}
+.signup input:focus{border-color:var(--lime)}
+.signup .btn-primary{white-space:nowrap}
+.signup-note{font-size:.82rem; color:var(--gray-dim); margin-top:18px; position:relative}
+.signup-done{display:none; color:var(--lime); font-weight:700; font-size:1.1rem; margin-top:8px}
+
+/* ---------- FOOTER ---------- */
+footer{border-top:1px solid var(--line); padding:50px 0 40px; background:var(--deep)}
+.foot-grid{display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:30px}
+.foot-logo{font-family:var(--disp); font-size:1.6rem}
+.foot-logo .dot{color:var(--lime)}
+.foot-tag{color:var(--gray); font-size:.9rem; margin-top:8px; max-width:280px; line-height:1.5}
+.foot-cols{display:flex; gap:60px; flex-wrap:wrap}
+.foot-col h6{font-size:.72rem; letter-spacing:.2em; text-transform:uppercase; color:var(--gray-dim); margin-bottom:14px; font-family:var(--en); font-weight:800}
+.foot-col a{display:block; color:var(--gray); font-size:.9rem; margin-bottom:9px; transition:.2s}
+.foot-col a:hover{color:var(--lime)}
+.foot-bottom{margin-top:44px; padding-top:24px; border-top:1px solid var(--line); display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; color:var(--gray-dim); font-size:.82rem}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a href="#top" class="logo"><span class="dot"></span>GYMGOGO</a>
+  <div class="nav-links">
+    <a href="#problem">문제</a>
+    <a href="#how">작동 방식</a>
+    <a href="#mission">미션</a>
+    <a href="#price">가격</a>
+    <a href="#signup" class="nav-cta">출시 알림 받기</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero" id="top">
+  <div class="hero-glow"></div>
+  <div class="hero-grid"></div>
+  <div class="wrap">
+    <div class="hero-text">
+      <div class="hero-badge"><span class="b-dot"></span>2026 출시 예정 · iOS / Android</div>
+      <h1>
+        <span class="reveal-line"><span style="animation-delay:.05s">JUST</span></span>
+        <span class="reveal-line"><span class="go" style="animation-delay:.15s">GO GO.</span></span>
+      </h1>
+      <p class="kr-head">등록만 하고 안 가던 당신.<br>짐고고가 <span class="lime">책임집니다.</span></p>
+      <p class="sub">알람이 울리면 헬스장으로. 도착해서 미션을 끝내야 알람이 꺼집니다. 의지가 없어도 괜찮습니다.</p>
+      <div class="hero-cta-row">
+        <a href="#signup" class="btn-primary">출시 알림 받기 →</a>
+        <a href="#how" class="btn-ghost">작동 방식 보기</a>
+      </div>
+    </div>
+    <div class="hero-phone">
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="scr">
+          <div class="top"><span>9:41</span><span>● ● ▮</span></div>
+          <h3>오늘도 짐고고</h3>
+          <div class="streak-card">
+            <div class="big">12일째</div>
+            <div class="lbl">연속 출석 중</div>
+          </div>
+          <div class="scr-row">
+            <div class="ic">◆</div>
+            <div><div class="t1">한 달러</div><div class="t2">다음 뱃지</div></div>
+            <div class="dday">D-18</div>
+          </div>
+          <div class="scr-row">
+            <div class="ic">⏰</div>
+            <div><div class="t1">오후 7:00</div><div class="t2">엄격 모드 · 매일</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- PROBLEM -->
+<section class="problem" id="problem">
+  <div class="wrap">
+    <div class="prob-grid">
+      <div class="prob-num fade"><span>71</span>%</div>
+      <div class="prob-txt fade">
+        <span class="mono-label">The Problem</span>
+        <h2 style="margin-top:14px">등록만 하고,<br>안 갑니다.</h2>
+        <p>직장인 71%가 헬스장 유료 등록 후 1개월 안에 포기합니다. 의지의 문제가 아닙니다 — 가게 만드는 장치가 없었을 뿐입니다.</p>
+        <div class="prob-stats">
+          <div class="prob-stat"><div class="pct">36%</div><div class="desc">업무·일상 불규칙</div></div>
+          <div class="prob-stat"><div class="pct">30%</div><div class="desc">동기·의지 상실</div></div>
+        </div>
+        <p class="src">출처: 한국건강증진개발원 설문 (인크루트 590명)</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW -->
+<section id="how">
+  <div class="wrap">
+    <div class="sec-head fade">
+      <span class="mono-label">How it works</span>
+      <h2>어떻게든 가게<br>만듭니다.</h2>
+      <p>알람이 잠을 강제로 깨우듯, 짐고고는 헬스장 도착을 강제합니다.</p>
+    </div>
+    <div class="how-steps">
+      <div class="step fade" data-n="1">
+        <div class="s-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 5a2 2 0 0 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6"/><path d="M9 17v1a3 3 0 0 0 6 0v-1"/></svg></div>
+        <h3>알람이 울린다</h3>
+        <p>설정한 시간에 강제 알람. 끄려면 헬스장에 가야 합니다. 그냥은 안 꺼집니다.</p>
+      </div>
+      <div class="step fade" data-n="2">
+        <div class="s-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0z"/></svg></div>
+        <h3>GPS가 확인한다</h3>
+        <p>헬스장 100m 안에 들어와야 도착으로 인정. 위치는 출석 확인에만 씁니다.</p>
+      </div>
+      <div class="step fade" data-n="3">
+        <div class="s-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5l10 -10"/></svg></div>
+        <h3>미션을 끝낸다</h3>
+        <p>30분 체류, 사진 인증까지. 강도는 직접 선택. 끝내면 비로소 알람 OFF.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MISSION -->
+<section id="mission">
+  <div class="wrap">
+    <div class="sec-head fade">
+      <span class="mono-label">Mission Levels</span>
+      <h2>의지 수준을<br>직접 고릅니다.</h2>
+      <p>오늘 얼마나 강하게 끌려갈지, 당신이 정합니다.</p>
+    </div>
+    <div class="missions">
+      <div class="mcard fade"><div class="bar" style="background:#22C55E"></div><h4>소프트</h4><span class="tier free">Free</span><ul><li>GPS 도착</li></ul></div>
+      <div class="mcard fade"><div class="bar" style="background:#EAB308"></div><h4>기본</h4><span class="tier pro">Pro</span><ul><li>GPS 도착</li><li>30분 체류</li></ul></div>
+      <div class="mcard fade pro-glow"><div class="bar" style="background:#F97316"></div><h4>엄격</h4><span class="tier pro">Pro</span><ul><li>GPS 도착</li><li>30분 체류</li><li>사진 인증</li></ul></div>
+      <div class="mcard fade"><div class="bar" style="background:#EF4444"></div><h4>익스트림</h4><span class="tier pro">Pro</span><ul><li>GPS 도착</li><li>30분 체류</li><li>사진 인증</li><li>친구 알림</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- BADGES -->
+<section class="badges-sec" id="badges">
+  <div class="wrap">
+    <div class="sec-head fade" style="margin-left:auto;margin-right:auto;text-align:center">
+      <span class="mono-label">Streak & Share</span>
+      <h2>버틴 만큼 증명됩니다.</h2>
+      <p style="margin-left:auto;margin-right:auto">연속 출석이 뱃지가 되고, 뱃지가 자랑이 됩니다.</p>
+    </div>
+    <div class="badge-flow">
+      <div class="badge fade"><div class="b-ic">🥉</div><h5>신입러</h5><div class="days">1회</div></div>
+      <div class="badge fade"><div class="b-ic">🥈</div><h5>작심삼일러</h5><div class="days">연속 3일</div></div>
+      <div class="badge fade"><div class="b-ic">🥇</div><h5>1주차</h5><div class="days">연속 7일</div></div>
+      <div class="badge fade key"><div class="b-ic">💎</div><h5>한 달러</h5><div class="days">연속 30일 · 상위 29%</div></div>
+      <div class="badge fade"><div class="b-ic">🏆</div><h5>100일러</h5><div class="days">누적 100일</div></div>
+      <div class="badge fade"><div class="b-ic">👑</div><h5>1년러</h5><div class="days">누적 365일</div></div>
+    </div>
+    <div class="share-card fade">
+      <div class="sc-top"><span class="sc-badge">◆ 한 달러</span></div>
+      <div class="sc-user">@seungho</div>
+      <div class="sc-main">연속 30일 헬스장 출석</div>
+      <div class="sc-quote">"그래도 갔다"</div>
+      <div class="sc-brand">GYMGOGO</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="price">
+  <div class="wrap">
+    <div class="sec-head fade">
+      <span class="mono-label">Pricing</span>
+      <h2>헬스장 회원권처럼.</h2>
+      <p>끊은 만큼 갑니다. 부담 없이 시작하고, 길게 끊을수록 저렴하게.</p>
+    </div>
+    <div class="price-grid">
+      <div class="pcard fade"><div class="period">1개월</div><div class="price">2,900</div><div class="permo">월 2,900원</div></div>
+      <div class="pcard fade"><div class="period">3개월</div><div class="price">7,900</div><div class="permo">월 2,633원</div><div class="save">9% 할인</div></div>
+      <div class="pcard fade"><div class="period">6개월</div><div class="price">14,900</div><div class="permo">월 2,483원</div><div class="save">14% 할인</div></div>
+      <div class="pcard fade best"><div class="tag">BEST VALUE</div><div class="period">12개월</div><div class="price">24,900</div><div class="permo">월 2,075원</div><div class="save">28% 할인</div></div>
+      <div class="pcard fade"><div class="period">평생</div><div class="price">39,900</div><div class="permo">한 번만</div></div>
+    </div>
+    <p class="price-note"><b>무료</b>로 GPS 도착 미션 + 광고와 함께 시작 · <b>Pro</b>는 30분 체류·사진·친구 알림·광고 제거</p>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-final" id="signup">
+  <div class="glow"></div>
+  <div class="wrap">
+    <h2 class="fade">READY?</h2>
+    <p class="kr fade">가자. 가자.</p>
+    <div class="signup fade">
+      <input type="email" id="email" placeholder="이메일을 입력하세요" aria-label="이메일">
+      <button class="btn-primary" onclick="submitEmail()">출시 알림 받기</button>
+    </div>
+    <p class="signup-note fade">출시되면 가장 먼저 알려드립니다. 스팸 없음.</p>
+    <p class="signup-done" id="done">신청 완료. 출시되면 알려드릴게요. 🟢</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="foot-logo">GYMGOGO<span class="dot">.</span></div>
+        <p class="foot-tag">등록만 하고 안 가던 당신. 짐고고가 책임집니다.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col">
+          <h6>Product</h6>
+          <a href="#how">작동 방식</a>
+          <a href="#mission">미션 강도</a>
+          <a href="#price">가격</a>
+        </div>
+        <div class="foot-col">
+          <h6>Company</h6>
+          <a href="#">Hoflow</a>
+          <a href="#signup">출시 알림</a>
+          <a href="#">문의</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Hoflow. All rights reserved.</span>
+      <span>Made by Hoflow · 1인 개발</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// nav scroll state
+const nav=document.getElementById('nav');
+addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>40));
+
+// reveal on scroll (stagger within sections)
+const io=new IntersectionObserver((es)=>{
+  es.forEach((e,i)=>{
+    if(e.isIntersecting){
+      const sibs=[...e.target.parentElement.querySelectorAll('.fade')];
+      const idx=sibs.indexOf(e.target);
+      e.target.style.transitionDelay=(idx>=0?Math.min(idx,6)*0.08:0)+'s';
+      e.target.classList.add('in');
+      io.unobserve(e.target);
+    }
+  });
+},{threshold:.15});
+document.querySelectorAll('.fade').forEach(el=>io.observe(el));
+
+// 71% count-up
+const numEl=document.querySelector('.prob-num');
+let counted=false;
+const io2=new IntersectionObserver((es)=>{
+  es.forEach(e=>{
+    if(e.isIntersecting&&!counted){
+      counted=true; let n=0;
+      const t=setInterval(()=>{n+=2; if(n>=71){n=71;clearInterval(t)} numEl.innerHTML='<span>'+n+'</span>%';},22);
+    }
+  });
+},{threshold:.4});
+io2.observe(numEl);
+
+// email (demo only — no backend)
+function submitEmail(){
+  const v=document.getElementById('email').value.trim();
+  if(!v||!v.includes('@')){document.getElementById('email').style.borderColor='#EF4444';return;}
+  document.querySelector('.signup').style.display='none';
+  document.querySelector('.signup-note').style.display='none';
+  document.getElementById('done').style.display='block';
+}
+</script>
+</body>
+</html>

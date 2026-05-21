@@ -109,7 +109,7 @@ section{padding:120px 0; position:relative}
 .problem{background:var(--deep)}
 .prob-grid{display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center}
 .prob-num{font-family:var(--disp); font-size:clamp(7rem,22vw,18rem); line-height:.8; color:var(--lime); text-shadow:0 0 60px rgba(163,230,53,.25); letter-spacing:-.02em}
-.prob-num span{font-size:.4em; vertical-align:top}
+.prob-num span{font-size:.5em; vertical-align:top; margin-left:.04em}
 .prob-txt h2{font-family:var(--kr); font-weight:900; font-size:clamp(1.8rem,4vw,2.8rem); line-height:1.2; letter-spacing:-.02em; margin-bottom:20px}
 .prob-txt p{color:var(--gray); font-size:1.05rem; line-height:1.7; margin-bottom:26px}
 .prob-stats{display:flex; gap:14px}
@@ -268,7 +268,7 @@ footer{border-top:1px solid var(--line); padding:50px 0 40px; background:var(--d
 <section class="problem" id="problem">
   <div class="wrap">
     <div class="prob-grid">
-      <div class="prob-num fade"><span>71</span>%</div>
+      <div class="prob-num fade">71<span>%</span></div>
       <div class="prob-txt fade">
         <span class="mono-label">The Problem</span>
         <h2 style="margin-top:14px">등록만 하고,<br>안 갑니다.</h2>
@@ -378,7 +378,7 @@ footer{border-top:1px solid var(--line); padding:50px 0 40px; background:var(--d
   <div class="glow"></div>
   <div class="wrap">
     <h2 class="fade">READY?</h2>
-    <p class="kr fade">가자. 가자.</p>
+    <p class="kr fade">GO. GO.</p>
     <div class="signup fade">
       <input type="email" id="email" placeholder="이메일을 입력하세요" aria-label="이메일">
       <button class="btn-primary" onclick="submitEmail()">출시 알림 받기</button>
@@ -444,7 +444,7 @@ const io2=new IntersectionObserver((es)=>{
   es.forEach(e=>{
     if(e.isIntersecting&&!counted){
       counted=true; let n=0;
-      const t=setInterval(()=>{n+=2; if(n>=71){n=71;clearInterval(t)} numEl.innerHTML='<span>'+n+'</span>%';},22);
+      const t=setInterval(()=>{n+=2; if(n>=71){n=71;clearInterval(t)} numEl.innerHTML=n+'<span>%</span>';},22);
     }
   });
 },{threshold:.4});
